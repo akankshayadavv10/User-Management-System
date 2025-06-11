@@ -49,3 +49,51 @@ module.exports.Login = async (req, res, next) => {
     console.error(error);
   }
 }
+
+module.exports.DeleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully", deletedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error while deleting user" });
+  }
+};
+
+
+module.exports.UpdateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { email, username, password } = req.body;
+
+    const updatedFields = {};
+    if (email) updatedFields.email = email;
+    if (username) updatedFields.username = username;
+    if (password) {
+      const bcrypt = require("bcryptjs");
+      const hashedPassword = await bcrypt.hash(password, 12);
+      updatedFields.password = hashedPassword;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User updated successfully", updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error while updating user" });
+  }
+};

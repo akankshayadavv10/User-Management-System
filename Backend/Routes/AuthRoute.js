@@ -1,4 +1,4 @@
-const { Signup, Login } = require('../Controllers/AuthController')
+const { Signup, Login,DeleteUser,UpdateUser } = require('../Controllers/AuthController')
 const router = require('express').Router()
 
 router.get("/signup", (req, res) => {
@@ -6,5 +6,6 @@ router.get("/signup", (req, res) => {
 });
 router.post('/signup', Signup)
 router.post('/login', Login)
-
+router.delete('/user/:id', DeleteUser);
+router.put('/user/:id', UpdateUser);
 module.exports = router
