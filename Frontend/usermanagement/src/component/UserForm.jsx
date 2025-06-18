@@ -4,20 +4,18 @@ import {
   Box,
   TextField,
   Button,
-  MenuItem,
   Typography,
   Paper,
 } from '@mui/material';
-
-const roles = ['Admin', 'Editor', 'Viewer'];
-const statuses = ['Active', 'Inactive'];
+import { useNavigate } from 'react-router-dom';
 
 const UserForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
-    role: '',
-    status: '',
+    password: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -28,10 +26,9 @@ const UserForm = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = 'Name is required';
+    if (!formData.username) newErrors.username = 'Username is required';
     if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.role) newErrors.role = 'Role is required';
-    if (!formData.status) newErrors.status = 'Status is required';
+    if (!formData.password) newErrors.password = 'Password is required';
     return newErrors;
   };
 
@@ -44,35 +41,41 @@ const UserForm = () => {
     }
 
     console.log('Form submitted:', formData);
-    setFormData({ name: '', email: '', role: '', status: '' });
+
+    // Reset form
+    setFormData({ username: '', email: '', password: '' });
     setErrors({});
+
+    // Navigate to login form after registration
+    navigate('/login');
   };
 
   const handleReset = () => {
-    setFormData({ name: '', email: '', role: '', status: '' });
+    setFormData({ username: '', email: '', password: '' });
     setErrors({});
   };
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 500, mx: 'auto', mt: 6 }}>
       <Typography variant="h5" gutterBottom>
-        User Management Form
+        User Registration
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
           fullWidth
-          label="Name"
-          name="name"
-          value={formData.name}
+          label="Username"
+          name="username"
+          value={formData.username}
           onChange={handleChange}
-          error={!!errors.name}
-          helperText={errors.name}
+          error={!!errors.username}
+          helperText={errors.username}
           sx={{ mb: 2 }}
         />
         <TextField
           fullWidth
           label="Email"
           name="email"
+          type="email"
           value={formData.email}
           onChange={handleChange}
           error={!!errors.email}
@@ -81,42 +84,19 @@ const UserForm = () => {
         />
         <TextField
           fullWidth
-          select
-          label="Role"
-          name="role"
-          value={formData.role}
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
           onChange={handleChange}
-          error={!!errors.role}
-          helperText={errors.role}
-          sx={{ mb: 2 }}
-        >
-          {roles.map((role) => (
-            <MenuItem key={role} value={role}>
-              {role}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          fullWidth
-          select
-          label="Status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          error={!!errors.status}
-          helperText={errors.status}
+          error={!!errors.password}
+          helperText={errors.password}
           sx={{ mb: 3 }}
-        >
-          {statuses.map((status) => (
-            <MenuItem key={status} value={status}>
-              {status}
-            </MenuItem>
-          ))}
-        </TextField>
+        />
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button type="submit" variant="contained" color="primary">
-            Submit
+            Register
           </Button>
           <Button onClick={handleReset} variant="outlined" color="secondary">
             Reset
