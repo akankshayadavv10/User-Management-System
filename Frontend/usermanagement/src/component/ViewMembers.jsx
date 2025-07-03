@@ -88,28 +88,26 @@ const ViewMembers = () => {
   const useDummyData = true; // Set false to fetch from backend
 
   useEffect(() => {
-    if (useDummyData) {
-      setTimeout(() => {
-        const dummyMembers = [
-          { name: "Alice Johnson", email: "alice@example.com", contact: "9998887777" },
-          { name: "Bob Smith", email: "bob@example.com", contact: "8887776666" },
-          { name: "Charlie Brown", email: "charlie@example.com", contact: "7776665555" },
-        ];
-        setMembers(dummyMembers);
+    // console.log(members);
+
+    //  else {
+    axios
+      .get("http://localhost:5000/members")
+      .then((res) => {
+        console.log("Fetched members:", res.data);
+        const membersArray = res.data ; // adjust if your array is inside a `data` key
+
+        setMembers(membersArray || []); // default to empty array
         setLoading(false);
-      }, 1000);
-    } else {
-      axios
-        .get("http://localhost:5000/api/members")
-        .then((res) => {
-          setMembers(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error("Failed to fetch members:", err);
-          setLoading(false);
-        });
-    }
+        console.log("Members state updated:", membersArray);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch members:", err);
+        setMembers([]); // ensure it's always an array
+        setLoading(false);
+      });
+
+    // }
   }, []);
 
   return (
@@ -171,7 +169,7 @@ const ViewMembers = () => {
                 <TableRow key={index} hover>
                   <TableCell sx={{ fontWeight: 500 }}>{member.name}</TableCell>
                   <TableCell>{member.email}</TableCell>
-                  <TableCell>{member.contact}</TableCell>
+                  <TableCell>{member.phone}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

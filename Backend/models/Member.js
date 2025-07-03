@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const userSchema = new mongoose.Schema({
+const memberSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Your Full Name is required"],
@@ -27,7 +27,7 @@ alternate_phone: {
   gender:{
     type: String,
     required: [true,"Gender is required"],
-    enum: ["Male","Female","Other"],
+    enum: ["male","female","other"],
   },
   address: {
     type: String,
@@ -57,7 +57,7 @@ alternate_phone: {
   },
 });
 
-userSchema.pre("save", async function () {
+memberSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 12);
 });
 
